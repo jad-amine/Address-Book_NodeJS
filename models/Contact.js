@@ -18,19 +18,21 @@ const contactSchema = new mongoose.Schema({
   },
   relationship_status: {
     type: String,
-    required: true,
+    // required: true,
   },
   location: {
     type: {
       type: String, // Don't do `{ location: { type: String } }`
       enum: ["Point"], // 'location.type' must be 'Point'
-      required: true,
+      // required: true,
     },
     coordinates: {
       type: [Number],
-      required: true,
+      // required: true,
     },
   },
 });
+
+module.exports = mongoose.model('Contact', contactSchema)
 
 // Decimal128 for long and latt coordination

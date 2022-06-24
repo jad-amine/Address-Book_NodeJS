@@ -24,4 +24,4 @@ app.use(express.json());
 
 app.use("/user", userRoutes);
 
-app.post("/addContact", contactsRoutes);
+app.use("/contacts", contactsRoutes);
