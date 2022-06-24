@@ -1,8 +1,21 @@
 const User = require("../models/User");
 
-const sayHi = (req, res) => {
-  console.log("from controller");
-  res.json({ message: "from userController" });
+const sayHi = async (req, res) => {
+  const user = new User({
+    name: "jad",
+    email: "jad@sef.com",
+    password: "test1234",
+  });
+
+  await user
+    .save()
+    .then((result) => {
+      console.log(result);
+      res.json({ result });
+    })
+    .catch((err) => {
+      console.log("db error", err);
+    });
 };
 
 module.exports = { sayHi };
