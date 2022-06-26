@@ -5,6 +5,6 @@ const userController = require("../controllers/userController");
 
 const router = express.Router();
 
-router.get("/", userMiddleware.test, userController.sayHi);
+router.post("/", userMiddleware.test, userController.sayHi);
 
 module.exports = router;

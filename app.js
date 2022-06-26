@@ -1,6 +1,7 @@
 // Import modules and dependencies
 require("dotenv").config();
 const express = require("express");
+const jwt = require("jsonwebtoken");
 const cors = require("cors");
 const mongoose = require("mongoose");
 // console.log(process.env.S3_BUCKET);
@@ -25,3 +26,4 @@ app.use(express.json());
 app.use("/user", userRoutes);
 
 app.use("/contacts", contactsRoutes);
+

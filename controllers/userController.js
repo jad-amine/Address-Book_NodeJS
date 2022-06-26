@@ -1,21 +1,19 @@
 const User = require("../models/User");
+const bcrypt = require("bcrypt");
 
 const sayHi = async (req, res) => {
-  const user = new User({
-    name: "jad",
-    email: "jad@sef.com",
-    password: "test1234",
-  });
+  const saltRounds = 10;
+  const user = new User(req.body);
 
-  await user
-    .save()
-    .then((result) => {
-      console.log(result);
+  bcrypt.hash(user.password, saltRounds, async function (err, hash) {
+    user.password = hash;
+    await user.save().then((result) => {
       res.json({ result });
+    }).catch((err) => {
+      console.log(err);
+      res.status(401).send({message: 'Duplicate user'})
     })
-    .catch((err) => {
-      console.log("db error", err);
-    });
+  });
 };
 
 module.exports = { sayHi };

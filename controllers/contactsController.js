@@ -7,9 +7,14 @@ const getContacts = async (req, res) => {
 
 const addContact = async (req, res) => {
   const contact = new Contact(req.body);
-  await contact.save().then((result) => {
-    return res.json({ result });
-  });
+  try {
+    await contact.save().then((result) => {
+      return res.status(200).json({ result });
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(400).json({ message: 'Duplicate User' })
+  }
 };
 
 module.exports = { getContacts, addContact };

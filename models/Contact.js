@@ -18,7 +18,7 @@ const contactSchema = new mongoose.Schema({
   },
   relationship_status: {
     type: String,
-    // required: true,
+    required: true,
   },
   location: {
     type: {
@@ -28,7 +28,7 @@ const contactSchema = new mongoose.Schema({
     },
     coordinates: {
       type: [Number],
-      // required: true,
+      required: true,
     },
   },
 });
