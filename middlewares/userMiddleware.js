@@ -1,7 +1,7 @@
 const bcrypt = require("bcrypt");
 const User = require("../models/User");
 const jwt = require("jsonwebtoken");
-const dotenv = require("dotenv");
+require("dotenv").config();
 
 // Login User
 const login = async (req, res, next) => {
@@ -23,6 +23,7 @@ const login = async (req, res, next) => {
     );
 
     res.json({ message: "Success", token: token });
+    // to send data between middlewares
     // req.dataFromMiddleware = token;
     // res.locals = token;
     // next();
@@ -31,44 +32,22 @@ const login = async (req, res, next) => {
   }
 };
 
+// Verify token
 const authUser = (req, res, next) => {
-  console.log(req.body);
-
-  let tokenHeaderKey = process.env.TOKEN_HEADER_KEY;
-  let jwtSecretKey1 = process.env.JWT_SECRET_KEY;
-
   try {
-    const token = req.header(tokenHeaderKey);
-
-    const verified = jwt.verify(token, jwtSecretKey1);
+    const token = req.headers.authorization.split(" ")[1];
+    console.log(token);
+    const verified = jwt.verify(token, process.env.JWT_SECRET_KEY);
     if (verified) {
-      return res.send("Successfully Verified");
+      next();
     } else {
       // Access Denied
-      return res.status(401).send(error);
+      return res.send("unauthenticated");
     }
   } catch (error) {
     // Access Denied
-    return res.status(401).send(error);
+    return res.send("error");
   }
-
-  let jwtSecretKey = process.env.JWT_SECRET_KEY;
-  let data = {
-    time: Date(),
-    userId: 12,
-  };
-
-  const token = jwt.sign(data, jwtSecretKey);
-
-  res.send(token);
-
-  User.findOne({ name: req.body.name })
-    .then((result) => {
-      result
-        ? res.json(result)
-        : res.status(401).json({ message: "not found" });
-    })
-    .catch((err) => res.status(500).json({ message: "Server error" }));
 };
 
 module.exports = { login, authUser };
