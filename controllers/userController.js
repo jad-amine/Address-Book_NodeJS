@@ -2,12 +2,17 @@ const User = require("../models/User");
 const bcrypt = require("bcrypt");
 
 const sayHi = async (req, res) => {
-  res.status(200).send({ message: "Request passed the jwt auth middleware" });
+  res
+    .status(200)
+    .send({
+      message: "Request passed the jwt auth middleware",
+      token: req.dataFromMiddleware,
+    });
+
+    // OR: res.locals.token
 };
 
 module.exports = { sayHi };
-
-
 
 //  =============== bycrypt hashing ==================
 // const saltRounds = 10;

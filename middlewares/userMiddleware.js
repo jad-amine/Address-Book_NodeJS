@@ -3,7 +3,35 @@ const User = require("../models/User");
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
 
-const login = (req, res, next) => {
+// Login User
+const login = async (req, res, next) => {
+  try {
+    const user = await User.findOne({ email: req.body.email });
+    if (!user) res.json({ message: "Invalid Credentials" });
+
+    // for Sign up:
+    // const salt = await bcrypt.genSalt(10);
+    // const hashPassword = await bcrypt.hash(req.body.password, salt);
+    const validPassword = await bcrypt.compare(
+      req.body.password,
+      user.password
+    );
+    if (!validPassword) res.json({ message: "Invalid Credentials" });
+    const token = jwt.sign(
+      { _id: user._id, name: user.name, email: user.email },
+      process.env.JWT_SECRET_KEY
+    );
+
+    res.json({ message: "Success", token: token });
+    // req.dataFromMiddleware = token;
+    // res.locals = token;
+    // next();
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const authUser = (req, res, next) => {
   console.log(req.body);
 
   let tokenHeaderKey = process.env.TOKEN_HEADER_KEY;
@@ -43,4 +71,4 @@ const login = (req, res, next) => {
     .catch((err) => res.status(500).json({ message: "Server error" }));
 };
 
-module.exports = { login };
+module.exports = { login, authUser };
